@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login|simple chat app</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>try{Typekit.load({async:true});}catch(e){}</script>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                 <div class="card" style="width: 700px;">
+                     <div class="card-header">Login </div>
+                     <div class="card-body">
+                            <form >
+                                <div class="form-group row mt-2">
+                                    <label for="email" class="col-md-4 text-md-right">Email Address</label>
+                                    <div class="col-md-8">
+                                        <input type="email" autocomplete="email" id="email" class="form-control" name="email" autofocus placeholder="email">
+                                        <span class="text-danger" id="emailErr"></span>
+                                    </div>
+                                </div>    
+                                <div class="form-group row mt-2">
+                                    <label for="password" class="col-md-4 text-md-right">Password</label>
+                                    <div class="col-md-8">
+                                        <input type="password" autocomplete="current-password" id="password" class="form-control" name="password" autofocus placeholder="password">
+                                        <span class="text-danger" id="passwordErr"></span>
+                                    </div>
+                                </div>    
+                                <div class="form-group row mt-2">
+                                    <div class="col-md-4 "></div>
+                                    <div class="col-md-8">
+                                        <div class="checkbox">
+                                            <label >
+                                                <input type="checkbox" name="remember">remember me
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>         
+                                <div class="form-group row mt-2">
+                                    <div class="col-md-4 "></div> 
+                                    <div class="col-md-8">
+                                        <button type="button" id="authenticateUser" class="btn btn-primary submit">
+                                            Login
+                                        </button>  
+                                        <p class="text-black mt-2 mb-2">I do not have an Account <a href="singup.html" style="text-decoration: none;">Sign me up</a></p> 
+                            
+                                    </div>
+                                </div>      
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="validation.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import {getAuth,signInWithEmailAndPassword}  from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMkiWv8wk4xdUkFaHPwb28zCd0iBu-Il8",
+            authDomain: "simplechata-45c8b.firebaseapp.com",
+            databaseURl: "https://simplechata-45c8b-default-rtdb.firebaseio.com/",
+            projectId: "simplechata-45c8b",
+            storageBucket: "simplechata-45c8b.appspot.com",
+            messagingSenderId: "379474441041",
+            appId: "1:379474441041:web:41e4596461bc0d68d55970",
+            measurementId: "G-XNZCGL5D07"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        function authenticateFromFirebase(){
+            if( validateLoginInputCredentials()){
+                const auth = getAuth(app);
+                signInWithEmailAndPassword(auth ,email,password)
+                .then((userCredentials)=>{
+                    const user = userCredentials.user;
+                    localStorage.setItem('loggedin_user_id',user.uid)
+                    localStorage.setItem('loggedin_user_email',user.email)
+                    setTimeout(location.href="start-chat.html",2000)
+
+                }).catch((error)=>{
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+
+                })
+            }
+        }
+        $("#authenticateUser").on('click',function(){
+            authenticateFromFirebase();
+            })
+      </script>
+      
+    
+</body>
+</html>
